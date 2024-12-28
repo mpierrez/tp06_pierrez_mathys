@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+  "target": "https://cnamapp-qz22.onrender.com/",
+  "secure": false,
+  "logLevel": "debug",
+  "changeOrigin": true
+  }
+}
