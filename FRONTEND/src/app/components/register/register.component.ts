@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErr
 
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../api.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RequiredComponent } from '../required/required.component';
 
 @Component({
@@ -19,7 +19,7 @@ export class RegisterComponent implements OnInit{
   errorMessage: string = '';
   alreadySubmitted: boolean = false;
 
-  constructor(private fb: FormBuilder, private apiService: ApiService) {}
+  constructor(private fb: FormBuilder, private apiService: ApiService, private router : Router) {}
 
   ngOnInit() {
     this.registerUserForm = this.fb.group({
@@ -117,7 +117,7 @@ export class RegisterComponent implements OnInit{
 
     this.apiService.registerClient(client).subscribe(
       (res) => {
-        window.location.href = '/login';
+        this.router.navigate(['/login']);
       },
       (error) => {
         this.errorMessage = error.error;

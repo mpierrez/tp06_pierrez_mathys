@@ -1,6 +1,6 @@
 export const environment = {
-  backendUserLogin: 'https://cnamapp-qz22.onrender.com/api/user/login',
-  backendUserRegister: 'https://cnamapp-qz22.onrender.com/api/user/register',
-  backendUserByToken: 'https://cnamapp-qz22.onrender.com/api/user',
-  backendCakes: 'https://cnamapp-qz22.onrender.com/api/cakes',
+  backendUserLogin: 'http://localhost:443/api/user/login',
+  backendUserRegister: 'http://localhost:443/api/user/register',
+  backendUserByToken: 'http://localhost:443/api/user',
+  backendCakes: 'http://localhost:443/api/cakes',
 };
