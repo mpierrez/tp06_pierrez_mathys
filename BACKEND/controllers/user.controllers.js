@@ -53,7 +53,7 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
-  const utilisateur = {
+  const user = {
     lastname: req.body.lastname,
     firstname: req.body.firstname,
     login: req.body.login,
@@ -62,13 +62,13 @@ exports.register = (req, res) => {
   };
 
   let pattern = /^[A-Za-z0-9]{1,20}$/;
-  if (pattern.test(utilisateur.login) && pattern.test(utilisateur.password)) {
-    let loginAlreadyExists = users.find(user => user.login == utilisateur.login);
+  if (pattern.test(user.login) && pattern.test(user.password)) {
+    let loginAlreadyExists = users.find(u => u.login == user.login);
     if (loginAlreadyExists) {
       res.status(401).send("Ce login existe déjà");
     } else {
-      utilisateur.id = users.length + 1;
-      users.push(utilisateur);
+      user.id = users.length + 1;
+      users.push(user);
       const accessToken = generateAccessToken(user);
       res.status(200).send({ accessToken });
     }
