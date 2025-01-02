@@ -19,7 +19,7 @@ import { Client } from '../../../models/client';
 })
 
 export class CatalogueComponent implements OnInit {
-  availableCakes$: Observable<Cake[]>;
+  cakes$: Observable<Cake[]>;
   user$: Observable<Client>;
 
   constructor(private store: Store, private apiService: ApiService, private router: Router) {}
@@ -30,7 +30,7 @@ export class CatalogueComponent implements OnInit {
       localStorage.setItem('errorMessage', 'Vous devez être connecté pour accéder à cette page');
       this.router.navigate(['/login']);
     }
-    this.availableCakes$ = this.apiService.getCakes();
+    this.cakes$ = this.apiService.getCakes();
     this.user$ = this.apiService.getCurrentUserInfos();
   }
 

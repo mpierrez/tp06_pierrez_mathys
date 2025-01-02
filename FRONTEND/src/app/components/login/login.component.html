@@ -13,13 +13,13 @@
     <div class="mb-3">
       <label for="login" class="form-label">Login <app-required/></label>
       <input class="form-control" formControlName="loginControl" type="text" id="login" name="login" placeholder="Entrez le login du compte" required>
-      <small>{{ validateTitleControl(loginControl) }}</small>
+      <small>{{ getErrors('loginControl') }}</small>
     </div>
 
     <div class="mb-3">
         <label for="password" class="form-label">Mot de passe <app-required/></label>
         <input class="form-control" formControlName="passwordControl" type="password" id="password" name="password" placeholder="Entrez le mot de passe du compte" required>
-        <small>{{ validateTitleControl(passwordControl) }}</small>
+        <small>{{ getErrors('passwordControl') }}</small>
     </div>
 
     <a routerLink="/register" class="btn btn-link">Pas encore de compte ? Inscrivez-vous !</a>

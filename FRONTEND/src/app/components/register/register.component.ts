@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../api.service';
 import { Router, RouterModule } from '@angular/router';
 import { RequiredComponent } from '../required/required.component';
+import { getControlName, validateTitleControl } from '../../app.utils';
 
 @Component({
     selector: 'app-register',
@@ -39,59 +39,9 @@ export class RegisterComponent implements OnInit{
     return password === confirmPassword ? null : { passwordsMismatch: true };
   }
 
-  get firstnameControl(): FormControl {
-    return this.registerUserForm.get('firstnameControl') as FormControl;
-  }
-
-  get lastnameControl(): FormControl {
-    return this.registerUserForm.get('lastnameControl') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.registerUserForm.get('emailControl') as FormControl;
-  }
-
-  get loginControl(): FormControl {
-    return this.registerUserForm.get('loginControl') as FormControl;
-  }
-
-  get passwordControl(): FormControl {
-    return this.registerUserForm.get('passwordControl') as FormControl;
-  }
-
-  get confirmPasswordControl(): FormControl {
-    return this.registerUserForm.get('confirmPasswordControl') as FormControl;
-  }
-
-  public validateTitleControl(titleControl: FormControl): string {
-    if(titleControl.errors?.['passwordsMismatch']) {
-      return 'Les mots de passe ne correspondent pas';
-    }
-
-    if (titleControl.errors && (titleControl?.touched  || this.alreadySubmitted)) {
-      if (titleControl.errors?.['required']) {
-        return 'Le champ est obligatoire';
-      }
-
-      if (titleControl.errors?.['minlength']) {
-        return `Le champ doit contenir au moins ${titleControl.errors['minlength'].requiredLength} caractères`;
-      }
-      if (titleControl.errors?.['maxlength']) {
-        return `Le champ doit contenir au plus ${titleControl.errors['maxlength'].requiredLength} caractères`;
-      }
-
-      if(titleControl.errors?.['email']) {
-        return 'Le champ doit être un email valide';
-      }
-
-      if (titleControl.errors?.['pattern']) {
-        return 'Le champ ne doit contenir que des lettres';
-      }
-
-      return 'Erreur inconnue';
-    }
-    return '';
-  }
+  protected getErrors(name: string) : string {
+      return validateTitleControl(getControlName(this.registerUserForm, name), this.alreadySubmitted);
+  };
 
   submitForm() {
     this.errorMessage = '';
@@ -117,6 +67,7 @@ export class RegisterComponent implements OnInit{
 
     this.apiService.registerClient(client).subscribe(
       (res) => {
+        this.registerUserForm.reset();
         this.router.navigate(['/login']);
       },
       (error) => {
@@ -124,8 +75,5 @@ export class RegisterComponent implements OnInit{
         console.error('Register request failed', error);
       }
     );
-
-    this.registerUserForm.reset();
-    this.alreadySubmitted = false;
   }
 }

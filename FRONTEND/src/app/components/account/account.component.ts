@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { RequiredComponent } from '../required/required.component';
 import { HeaderComponent } from '../header/header.component';
+import { validateTitleControl, getControlName } from '../../app.utils';
 
 @Component({
   selector: 'app-account',
@@ -59,6 +60,10 @@ export class AccountComponent implements OnInit {
       return password === confirmPassword ? null : { passwordsMismatch: true };
     }
 
+  protected getErrors(name: string) : string {
+    return validateTitleControl(getControlName(this.userForm, name), this.alreadySubmitted);
+  };
+
   onSubmit() {
     this.errorMessage = '';
     this.alreadySubmitted = true;
@@ -91,7 +96,6 @@ export class AccountComponent implements OnInit {
         console.error(err);
       }
     );
-    this.alreadySubmitted = false;
   }
 
   onDisconnect() {
@@ -99,59 +103,5 @@ export class AccountComponent implements OnInit {
       localStorage.removeItem('token');
       this.router.navigate(['/login']);
     }
-  }
-
-  public validateTitleControl(titleControl: FormControl): string {
-    if(titleControl.errors?.['passwordsMismatch']) {
-      return 'Les mots de passe ne correspondent pas';
-    }
-
-    if (titleControl.errors && (titleControl?.touched  || this.alreadySubmitted)) {
-        if (titleControl.errors?.['required']) {
-          return 'Le champ est obligatoire';
-        }
-
-        if (titleControl.errors?.['minlength']) {
-          return `Le champ doit contenir au moins ${titleControl.errors['minlength'].requiredLength} caractères`;
-        }
-        if (titleControl.errors?.['maxlength']) {
-          return `Le champ doit contenir au plus ${titleControl.errors['maxlength'].requiredLength} caractères`;
-        }
-
-        if(titleControl.errors?.['email']) {
-          return 'Le champ doit être une adresse email valide';
-        }
-
-        if (titleControl.errors?.['pattern']) {
-          return 'Le champ ne respecte pas le format attendu';
-        }
-
-        return 'Erreur non répertoriée';
-      }
-      return '';
-    }
-
-  get firstnameControl(): FormControl {
-    return this.userForm.get('firstnameControl') as FormControl;
-  }
-
-  get lastnameControl() : FormControl {
-    return this.userForm.get('lastnameControl')as FormControl;
-  }
-
-  get emailControl() : FormControl {
-    return this.userForm.get('emailControl')as FormControl;
-  }
-
-  get loginControl() : FormControl {
-    return this.userForm.get('loginControl')as FormControl;
-  }
-
-  get passwordControl() : FormControl {
-    return this.userForm.get('passwordControl')as FormControl;
-  }
-
-  get confirmPasswordControl() : FormControl {
-    return this.userForm.get('confirmPasswordControl')as FormControl;
   }
 }

@@ -6,6 +6,7 @@ import { ApiService } from '../../../api.service';
 import { Router, RouterModule } from '@angular/router';
 import { RequiredComponent } from '../required/required.component';
 import { LoginResponse } from './loginResponse';
+import { getControlName, validateTitleControl } from '../../app.utils';
 
 @Component({
     selector: 'app-login',
@@ -30,24 +31,9 @@ export class LoginComponent implements OnInit{
     });
   }
 
-  get loginControl(): FormControl {
-    return this.loginUserForm.get('loginControl') as FormControl;
-  }
-
-  get passwordControl(): FormControl {
-    return this.loginUserForm.get('passwordControl') as FormControl;
-  }
-
-  public validateTitleControl(titleControl: FormControl): string {
-    if (titleControl.errors && (titleControl?.touched  || this.alreadySubmitted)) {
-      if (titleControl.errors?.['required']) {
-        return 'Le champ est obligatoire';
-      }
-
-      return 'Erreur inconnue';
-    }
-    return '';
-  }
+  protected getErrors(name: string) : string {
+      return validateTitleControl(getControlName(this.loginUserForm, name), this.alreadySubmitted);
+  };
 
   submitForm() {
     this.errorMessage = '';
@@ -62,6 +48,7 @@ export class LoginComponent implements OnInit{
 
     this.apiService.loginClient(loginControl, passwordControl).subscribe(
       (res: LoginResponse) => {
+        this.loginUserForm.reset();
         localStorage.setItem('token', res.accessToken);
         this.router.navigate(['/catalogue']);
       },
@@ -70,7 +57,5 @@ export class LoginComponent implements OnInit{
         console.error(err);
       }
     );
-    this.loginUserForm.reset();
-    this.alreadySubmitted = false;
   }
 }
